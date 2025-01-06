@@ -1,0 +1,48 @@
+version: "3"
+
+volumes:
+  postgres_volume:
+  grafana_volume:
+  prometheus_volume:
+
+services:
+  pg:
+    image: postgres:14-alpine3.17
+    env_file:
+      - ".env"
+    ports:
+      - "5555:5432"
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+
+  migrator-chat-service:
+    build:
+      context: ./chat_service
+      dockerfile: migrations.Dockerfile
+    restart: on-failure
+    environment:
+      DB_HOST: pg
+
+  migrator-message-service:
+    build:
+      context: ./message_service
+      dockerfile: migrations.Dockerfile
+    restart: on-failure
+    environment:
+      DB_HOST: pg
+
+  # prometheus:
+  #  image: prom/prometheus:v2.37.9
+  #  ports:
+  #    - "9090:9090"
+  #  volumes:
+  #    - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #    - ./alert.yml:/etc/prometheus/alert.yml
+  #     - prometheus_volume:/prometheus
+
+  # grafana:
+  #  image: grafana/grafana-oss:10.0.3
+  # ports:
+  #  - "3000:3000"
+  #   volumes:
+  # - grafana_volume:/var/lib/grafana

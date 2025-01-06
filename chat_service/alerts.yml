@@ -1,0 +1,11 @@
+groups:
+  - name: alert
+    rules:
+      - alert: TargetIsDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: medium
+        annotations:
+          summary: "Instance {{ $labels.job }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 30 sec."

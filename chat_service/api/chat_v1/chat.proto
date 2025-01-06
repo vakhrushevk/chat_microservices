@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package chat_v1;
+
+option go_package = "github.com/vakhrushevk/chatservice-server-service/pkg/chat_v1;chat_v1";
+
+service ChatV1 {
+  // Создание нового чата
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
+  // Удаление чата
+  rpc DeleteChat(DeleteChatRequest) returns (DeleteChatResponse);
+  // Добавление участника в чат
+  rpc AddChatMember(ChatMemberInfo) returns (AddChatMemberResponse);
+  // Удаление участника из чата
+  rpc RemoveChatMember(RemoveChatMemberRequest) returns (RemoveChatMemberResponse);
+  // Получение списка чатов пользователя
+  rpc ListChats(ListChatsRequest) returns (ListChatsResponse);
+}
+
+message CreateChatRequest {
+  string name = 1; // Название чата
+  int64 created_by = 2; // id создателя
+}
+
+message CreateChatResponse{
+  int64 chat_id = 1; // id созданного чата
+}
+
+message DeleteChatRequest {
+  int64 chat_id = 1; // id чата
+  int64 deleted_by = 2; // id удаляющего
+}
+
+message DeleteChatResponse {
+  bool success = 1; // success flag
+}
+
+message AddChatMemberResponse {
+  bool success = 1; // success flag
+}
+
+message RemoveChatMemberRequest{
+  ChatMemberInfo chat_member_info = 1;
+  int64 removed_by = 2; // id удаляющего
+}
+
+message ChatMemberInfo{
+  int64 chat_id = 1; // id чата
+  int64 user_id = 2; // id удаляемого участника
+}
+
+message RemoveChatMemberResponse {
+  bool success = 1; // success flag
+}
+
+message ListChatsResponse {
+  repeated ChatInfo chats = 1;
+}
+
+message ListChatsRequest {
+  int64 user_id = 1; // id пользователя
+}
+
+message ChatInfo{
+  int64 chat_id = 1; // id чата
+  string name = 2; // название чата
+  repeated int64 member_ids = 3; // id участников
+}

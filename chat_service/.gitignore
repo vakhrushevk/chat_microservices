@@ -1,0 +1,4 @@
+.idea
+/bin/
+/cmd/grpc_server/tmp/
+/cmd/bin/
